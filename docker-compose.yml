@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: django_app
+    environment:
+      DB_NAME: django
+      DB_USER: django
+      DB_PASSWORD: django
+      DB_HOST: mariadb
+      DJ_USER: django
+      DJ_PASSWORD: django
+      DJ_EMAIL: a@a.com
+      ALLOWED_HOSTS: "*"
+      URL: http://localhost
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mariadb
+    networks:
+      - django-net
+
+  mariadb:
+    image: mariadb:11.6
+    container_name: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: django
+      MARIADB_USER: django
+      MARIADB_PASSWORD: django
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - django-net
+
+volumes:
+  db_data:
+
+networks:
+  django-net:
+    driver: bridge
